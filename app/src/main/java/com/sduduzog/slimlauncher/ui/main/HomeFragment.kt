@@ -3,11 +3,13 @@ package com.sduduzog.slimlauncher.ui.main
 import android.app.Activity
 import android.content.*
 import android.content.pm.LauncherApps
+import android.net.Uri
 import android.os.Bundle
 import android.os.UserManager
 import android.provider.AlarmClock
 import android.provider.CalendarContract
 import android.provider.MediaStore
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,6 +37,7 @@ import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
+
 
 @AndroidEntryPoint
 class HomeFragment : BaseFragment(), OnLaunchAppListener {
@@ -272,6 +275,13 @@ class HomeFragment : BaseFragment(), OnLaunchAppListener {
         }
     }
 
+    private fun openAppSettings(packageName: String) {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri: Uri = Uri.fromParts("package", packageName, null)
+        intent.data = uri
+        startActivity(intent)
+    }
+
     private fun resetAppDrawerEditText() {
         app_drawer_edit_text.clearComposingText()
         app_drawer_edit_text.setText("")
@@ -282,6 +292,10 @@ class HomeFragment : BaseFragment(), OnLaunchAppListener {
         fun onAppClicked(app: UnlauncherApp) {
             launchApp(app.packageName, app.className, app.userSerial)
             home_fragment.transitionToStart()
+        }
+
+        fun onAppLongClicked(app: UnlauncherApp) {
+            openAppSettings(app.packageName)
         }
     }
 }

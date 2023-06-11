@@ -3,6 +3,7 @@ package com.sduduzog.slimlauncher.adapters
 import android.annotation.SuppressLint
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,6 +40,10 @@ class AppDrawerAdapter(
         holder.appName.text = item.displayName
         holder.itemView.setOnClickListener {
             listener.onAppClicked(item)
+        }
+        holder.itemView.setOnLongClickListener {
+            listener.onAppLongClicked(item)
+            true
         }
     }
 
