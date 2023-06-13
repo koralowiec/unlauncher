@@ -1,5 +1,6 @@
 package com.sduduzog.slimlauncher.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -28,7 +29,12 @@ class CustomizeAppDrawerAppsAdapter(
         holder.appName.text = item.displayName
         holder.appName.isChecked = item.displayInDrawer
         holder.itemView.setOnClickListener {
+            Log.d("qwe", "test")
             appsRepo.updateDisplayInDrawer(item, holder.appName.isChecked)
+        }
+        holder.itemView.setOnLongClickListener {
+            Log.d("qwe", "test")
+            true
         }
     }
 

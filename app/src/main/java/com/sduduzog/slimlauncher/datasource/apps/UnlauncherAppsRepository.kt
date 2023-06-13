@@ -56,6 +56,7 @@ class UnlauncherAppsRepository(
                         .setDisplayName(app.appName).setDisplayInDrawer(true)
                 )
                 appAdded = true
+                Log.d("asd", "App: $app")
             }
             // Remove any apps that no longer exist
             unlauncherApps.appsList.filter { unlauncherApp ->
@@ -89,6 +90,7 @@ class UnlauncherAppsRepository(
                     homeApp.packageName,
                     homeApp.activityName
                 )?.let { unlauncherApp ->
+                    Log.d("asd", "$homeApp")
                     if (!unlauncherApp.homeApp) {
                         val index = unlauncherAppsBuilder.appsList.indexOf(unlauncherApp)
                         if (index >= 0) {
@@ -124,6 +126,7 @@ class UnlauncherAppsRepository(
     }
 
     fun updateDisplayInDrawer(appToUpdate: UnlauncherApp, displayInDrawer: Boolean) {
+        Log.d("qwe", "updateDisplayInDrawer")
         lifecycleScope.launch {
             unlauncherAppsStore.updateData { currentApps ->
                 val builder = currentApps.toBuilder()

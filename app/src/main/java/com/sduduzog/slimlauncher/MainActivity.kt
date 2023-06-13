@@ -1,23 +1,16 @@
 package com.sduduzog.slimlauncher
 
-import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
-import android.view.GestureDetector
-import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.StyleRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.navigation.NavController
 import androidx.navigation.Navigation.findNavController
 import com.sduduzog.slimlauncher.utils.*
 import dagger.hilt.android.AndroidEntryPoint
-import java.lang.reflect.Method
-import kotlin.math.absoluteValue
 
 
 @AndroidEntryPoint
@@ -42,7 +35,6 @@ class MainActivity : AppCompatActivity(),
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        gestureDetector.onTouchEvent(ev)
         return super.dispatchTouchEvent(ev)
     }
 
@@ -160,54 +152,5 @@ class MainActivity : AppCompatActivity(),
 
     private fun completeBackAction() {
         super.onBackPressed()
-    }
-
-    private val gestureDetector = GestureDetector(baseContext, object : SimpleOnGestureListener() {
-        override fun onLongPress(e: MotionEvent) {
-            // Open Options
-            val homeView = findViewById<View>(R.id.home_fragment)
-            if(homeView != null) {
-                findNavController(homeView).navigate(R.id.action_homeFragment_to_optionsFragment, null)
-            }
-        }
-
-        override fun onFling(
-            e1: MotionEvent,
-            e2: MotionEvent,
-            velocityX: Float,
-            velocityY: Float
-        ): Boolean {
-            val homeView = findViewById<MotionLayout>(R.id.home_fragment)
-            if (homeView != null) {
-                val homeScreen = homeView.constraintSetIds[0]
-                val isFlingFromHomeScreen = homeView.currentState == homeScreen
-                val isFlingDown = velocityY > 0 && velocityY > velocityX.absoluteValue
-                if (isFlingDown && isFlingFromHomeScreen) {
-                    expandStatusBar()
-                }
-            }
-            return super.onFling(e1, e2, velocityX, velocityY)
-        }
-    })
-
-    @SuppressLint("WrongConstant")  // statusbar is an internal API
-    private fun expandStatusBar() {
-        try {
-            getSystemService("statusbar")?.let { service ->
-                val statusbarManager = Class.forName("android.app.StatusBarManager")
-                val expand: Method = statusbarManager.getMethod("expandNotificationsPanel")
-                expand.invoke(service)
-            }
-        } catch (e: Exception) {
-            // Do nothing. There does not seem to be any official way with the Android SKD to open the status bar.
-            // https://stackoverflow.com/questions/5029354/how-can-i-programmatically-open-close-notifications-in-android
-            // This hack may break on future versions of Android (or even just not work for specific manufacturer variants).
-            // So, if anything goes wrong, we will just do nothing.
-            Log.e(
-                "MainActivity",
-                "Error trying to expand the notifications panel.",
-                e
-            )
-        }
     }
 }
